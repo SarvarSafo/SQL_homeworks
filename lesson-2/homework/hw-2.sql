@@ -64,3 +64,95 @@ TRUNCATE TABLE Employees;
 	-- Insert five records into the Departments table using INSERT INTO SELECT from an existing table.
 
 
+INSERT INTO Departments (DepartmentID, DepartmentName)
+SELECT DISTINCT DepartmentID, DepartmentName
+FROM Employees
+WHERE DepartmentID IS NOT NULL AND DepartmentName IS NOT NULL; 
+
+	-- Update the Department of all employees where Salary > 5000 to 'Management'.
+
+UPDATE Employees 
+SET Department = 'Management'
+WHERE Salary > 5000;
+
+select * from Employees
+
+	-- Write a query that removes all employees but keeps the table structure intact.
+
+Delete from Employees
+
+	-- Drop the Department column from the Employees table.
+
+	Alter table Employees
+	Drop column Department;
+
+	-- Rename the Employees table to StaffMembers using SQL commands.
+
+	Exec sp_rename 'Employees', 'StaffMembers';
+
+	select Name from Staffmembers
+
+	-- Write a query to completely remove the Departments table from the database.
+
+drop table Departments
+	
+	-- Create a table named Products with at least 5 columns, including: ProductID (Primary Key), ProductName (VARCHAR), Category (VARCHAR), Price (DECIMAL)
+
+Create table Products (ProductID int Primary Key,ProductName VARCHAR(20), Category VARCHAR(20), Price DECIMAL(10,2))			
+
+	select * from Products
+
+	-- Add a CHECK constraint to ensure Price is always greater than 0.
+
+	ALTER TABLE Products
+	ADD CONSTRAINT chk_Price_GreaterThanZero CHECK (Price > 0);
+
+	-- Modify the table to add a StockQuantity column with a DEFAULT value of 50.
+
+Alter table Products
+Add StockQuantity Int default 50;
+
+	--Insert 5 records into the Products table using standard INSERT INTO queries.
+
+Insert into Products (ProductID, ProductName, Category, Price, StockQuantity) 
+values
+(1, 'Shokolad', 'Shirinlik', 10000, 12),
+(2, 'Qaymoq', 'Sut', 20000, 5),
+(3, 'Saqich', 'Shirinlik', 2000, 86),
+(4, 'Qovurga', 'Gosht', 100000, 10),
+(5, 'Bulochka', 'Non', 3000, 57);
+
+	-- Use SELECT INTO to create a backup table called Products_Backup containing all Products data.
+
+select * into Products_Backup from Products
+
+	-- Rename the Products table to Inventory.
+
+	Exec sp_rename 'Products', 'Inventory';
+
+	select * from inventory
+
+	-- Alter the Inventory table to change the data type of Price from DECIMAL(10,2) to FLOAT.
+ 
+ALTER TABLE Inventory
+DROP CONSTRAINT chk_Price_GreaterThanZero
+
+Alter table inventory 
+Alter column Price FLOAT
+
+Alter table inventory
+Add constraint chk_Price_GreaterThanZero CHECK (Price > 0)
+
+	-- Add an IDENTITY column named ProductCode that starts from 1000 and increments by 5
+
+Create table Inventory_2 (
+    [Product Code] int identity (1,1),
+    [Product ID] int,
+    [Product Name] varchar(100),
+    Category varchar(50),
+    Price numeric(10, 2),
+    [Stock Quantity] int
+);
+
+select * from Inventory_2
+
