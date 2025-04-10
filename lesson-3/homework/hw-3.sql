@@ -74,4 +74,99 @@ generate unique numbers for each new row in a table, typically used for primary 
 
 --10. Use BULK INSERT to import data from a text file into the Products table.
 
+/* Answer: create .txt file like products.txt then
+ProductID,ProductName,Amount
+1,Olma,100
+2,Banan,30
+3,Anjir,200
+*/
+
+create table Products (
+    ProductID int,
+    ProductName varchar(50),
+    Amount int);
+
+bulk insert Products
+from 'C:\Pc\products.txt'
+with (Fieldterminator = ',',
+    Rowterminator = '\n',
+    Firstrow = 2);
+
+-- 11. Create a FOREIGN KEY in the Products table that references the Categories table.
+
+create table Categories (ID int primary key, CategoryName varchar(30));
+
+create table Products (ProductID int primary key, ProductName varchar(30), Price decimal(10,2) not null, CategoryID int not null, constraint FK_Products_Categories foreign key (CategoryID) references Categories (ID));
+
+-- 12. Explain the differences between PRIMARY KEY and UNIQUE KEY with examples.
+
+/* Answer: Primary key: Only one allowed per table, cannot accept NULL values,
+Unique key: You can have multiple unique keys in a table, can accept NULL values (but only one NULL).
+*/
+
+-- 13. Add a CHECK constraint to the Products table ensuring Price > 0.
+
+Alter table Products
+Add constraint CHK_Price Check (Price > 0);
+
+-- 14. Modify the Products table to add a column Stock (INT, NOT NULL).
+
+Alter table Products
+Add Stock int not null;
+
+-- 15. Use the ISNULL function to replace NULL values in a column with a default value.
+
+Update Products 
+set Stock = ISNULL(Stock, 1)
+
+-- 16. Describe the purpose and usage of FOREIGN KEY constraints in SQL Server.
+
+-- Answer: FOREIGN KEY constraints are used to maintain relationships between tables and ensure data integrity.
+
+-- 17. Write a script to create a Customers table with a CHECK constraint ensuring Age >= 18.
+
+Create table Customers (CustomerID int Primary key,
+    CustomerName varchar(40), Age int,
+    constraint CK_Age check (Age >= 18));
+
+-- 18. Create a table with an IDENTITY column starting at 100 and incrementing by 10.
+
+create table [Identity] (Id int identity (100, 10), Name varchar(30));
+
+-- 19. Write a query to create a composite PRIMARY KEY in a new table OrderDetails.
+
+create table OrderDetails (ID int,
+    ProductID int,
+    Amount int,
+    Price decimal(10, 2),
+    constraint PK_OrderDetails primary key (ID, ProductID)
+);
+
+-- 20. Explain with examples the use of COALESCE and ISNULL functions for handling NULL values.
+
+/* Answer: COALESCE: Useful when you want to check multiple values and return the first non-NULL value.
+ISNULL: Useful when you want to check one value and replace it with a default value if it's NULL.
+*/
+
+Select EmployeeID, Coalesce (MiddleName, FirstName) as name 
+from Employees;
+
+Select EmployeeID, isnull (MiddleName, 'No Middle Name') as MiddleName
+from Employees;
+
+--21. Create a table Employees with both PRIMARY KEY on EmpID and UNIQUE KEY on Email.
+
+create table Employees (Empid int primary key,
+    name varchar(50),
+    email varchar(100) unique);
+
+--22. Write a query to create a FOREIGN KEY with ON DELETE CASCADE and ON UPDATE CASCADE options.
+
+create table customers (Customerid int primary key,
+    Empid int,
+    Orderdate date,
+    Constraint fk_customers_employees foreign key (empid) references employees (empid) on delete cascade on update cascade);
+
+--Done
+
 
