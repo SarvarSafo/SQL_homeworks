@@ -76,3 +76,58 @@ from Products order by productname desc;
 
 select top (10) * from Products
 order by Price desc;
+
+-- 12. Use COALESCE to return the first non-NULL value from FirstName or LastName in the Employees table.
+
+select coalesce (firstname, lastname) as name from Employees
+
+-- 13. Write a query that selects distinct Category and Price from the Products table.
+
+select distinct Category, Price from Products
+
+-- 14.Write a query that filters the Employees table to show employees whose Age is either between 30 and 40 or Department = 'Marketing'.
+
+select * from Employees
+where Age between 30 and 40 or DepartmentName = 'Marketing'
+
+-- 15. Use OFFSET-FETCH to select rows 11 to 20 from the Employees table, ordered by Salary DESC.
+
+select * from Employees
+order by Salary desc offset 10 rows fetch next 10 rows only;
+
+-- 16. Write a query to display all products with Price <= 1000 and Stock > 50, sorted by Stock in ascending order.
+
+select * from Products
+where price <= 1000 and Stockquantity > 50
+order by StockQuantity asc;
+
+-- 17. Write a query that filters the Products table for ProductName values containing the letter 'e' using LIKE.
+
+select * from Products
+where ProductName like '%e%';
+
+-- 18. Use IN operator to filter for employees who work in either 'HR', 'IT', or 'Finance'.
+
+select * from Employees
+where DepartmentName in ('HR', 'IT','Finance');
+
+-- 19. Use ORDER BY to display a list of customers ordered by City in ascending and PostalCode in descending order.Use customers table
+
+select * from Customers
+order by City asc, PostalCode desc;
+
+-- 20. Write a query that selects the top 10 products with the highest sales, using TOP(10) and ordered by SalesAmount DESC
+
+select top 10 * from Sales
+order by SaleAmount desc
+
+-- 21. Combine FirstName and LastName into one column named FullName in the Employees table. (only in select statement)
+
+select firstname + ' ' + lastname as Fullname  from Employees
+
+-- 22. Write a query to select the distinct Category, ProductName, and Price for products that are priced above $50, using DISTINCT on three columns.
+
+select distinct category, productname, price from Products
+where price > 50;
+
+-- 23.Write a query that selects products whose Price is less than 10% of the average price in the Products table. (Do some research on how to find average price of all products)
