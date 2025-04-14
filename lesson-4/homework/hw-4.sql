@@ -131,3 +131,34 @@ select distinct category, productname, price from Products
 where price > 50;
 
 -- 23.Write a query that selects products whose Price is less than 10% of the average price in the Products table. (Do some research on how to find average price of all products)
+
+select * from Products
+
+where price < (select AVG(price) * 0.1 from Products)
+
+-- 24. Use WHERE clause to filter for employees whose Age is less than 30 and who work in either the 'HR' or 'IT' department.
+
+select * from Employees
+where age < 30 and DepartmentName in ('HR', 'IT');
+
+-- 25. Use LIKE with wildcard to select all customers whose Email contains the domain '@gmail.com'.
+
+select * from Customers
+where Email like '%@gmail.com%'
+
+-- 26. Write a query that uses the ALL operator to find employees whose salary is greater than all employees in the 'Sales'(HR) department.
+
+select *
+from Employees
+where Salary > all (
+    select Salary
+    FROM Employees
+    WHERE DepartmentName = 'HR'
+);
+
+-- 27. Write a query that filters the Orders table for orders placed in the last 180 days using BETWEEN and CURRENT_DATE. (Search how to get the current date)
+
+select * from Orders
+where OrderDate between dateadd(day, -180, getdate()) and getdate();
+
+-- Done
