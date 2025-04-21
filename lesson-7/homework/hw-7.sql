@@ -136,5 +136,116 @@ group by Category
 select customerID, sum(SaleAmount) as ALLSALES from Sales
 group by CustomerID
 
---10.
+--10.Because there is no DeptID column in the table, I used DepartmentName for grouping
+
+select DepartmentName
+from Employees
+group by DepartmentName
+having count(*) >5
+
+--11.
+
+select Productid, sum(saleamount) as totalsales, avg(saleamount) as averagesales
+from sales
+group by ProductID
+
+--12.
+select count(employeeid) as Hr_employees
+from Employees
+where DepartmentName = 'HR'
+
+--13.Because there is no DeptID column in the table, I used EmployeeID for grouping
+select max(salary) as maximum_salary, min(salary) as minimum_salary
+from Employees
+group by EmployeeID
+
+--14.Because there is no DeptID column in the table, I used DepartmentName for grouping
+
+select DepartmentName, avg(salary) as average_salary
+from Employees
+group by DepartmentName
+
+--15.Because there is no DeptID column in the table, I used EmployeeID for grouping
+
+select DepartmentName, avg(salary) as average_salary, count(employeeID) as workers
+from Employees
+group by departmentname
+
+--16.
+
+select Category, avg(price) as average_price
+from Products
+group by Category
+having avg(price) > 400
+
+--17.
+
+select * from Sales
+select year(SaleDate) as yearbysales, 
+       SUM(SaleAmount) as total_sales
+from Sales
+group by YEAR(SaleDate);
+
+--18.
+select * from Orders
+select CustomerID, count(*) as orders
+from orders
+group by CustomerID
+having count(*) >=3
+
+--19.
+select * from Employees
+select DepartmentName, sum(salary) as DepartmentSalaries
+from Employees
+group by DepartmentName
+having sum(salary) > 500000
+
+--20. 
+select ProductID, avg(saleamount)
+from Sales
+group by ProductID
+having avg(saleamount) > 200
+
+--21.
+
+select CustomerID, SUM(SaleAmount) AS total_sales_bycustomer
+from Sales
+group by CustomerID
+having sum(SaleAmount) > 1500;
+
+--22.
+
+select * from Employees
+select DepartmentName, sum(salary)as summary, avg(salary) as average
+from Employees
+group by DepartmentName
+having avg(salary) > 65000
+
+--23.
+
+select * from Orders
+select customerID, max(totalamount)as maxorders, min(totalamount) as minorders 
+from orders
+group by Customerid
+having min(totalamount) >=50
+
+--Write a query that calculates the total sales (SUM) and counts distinct products sold in each month, and then applies HAVING to filter the months with more than 8 products sold.
+
+select
+    MONTH(OrderDate) AS SalesMonth,
+    SUM(TotalAmount) AS TotalSales,
+    COUNT(DISTINCT ProductID) AS ProductCount
+FROM Orders
+GROUP BY MONTH(OrderDate)
+HAVING COUNT(DISTINCT ProductID) > 8;
+
+--Write a query to find the MIN and MAX order quantity per Year. From orders table. (Do some research)
+
+SELECT 
+    YEAR(OrderDate) AS OrderYear,
+    MIN(Quantity) AS MinQuantity,
+    MAX(Quantity) AS MaxQuantity
+FROM Orders
+GROUP BY YEAR(OrderDate);
+
 
