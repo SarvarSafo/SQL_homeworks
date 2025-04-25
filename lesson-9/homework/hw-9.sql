@@ -593,14 +593,76 @@ WHERE
 
 -- Using Products, Categories table Show products where category is either 'Electronics' or 'Furniture'.
 
-
-
-
+select Products.ProductName, Categories.CategoryName 
+		from Products
+		inner join
+		Categories on Products.ProductID = Categories.CategoryID
+		where Categories.CategoryName = 'Electronics' or Categories.CategoryName = 'Furniture'
 
 -- Using Sales, Customers table Show all sales from customers who are from 'USA'.
+
+select CONCAT_WS(' ', firstname, LastName) as name, Customers.Country
+	from Sales
+	inner join
+	Customers on Sales.CustomerID = Customers.CustomerID
+	where Customers.Country = 'USA'
+
 -- Using Orders, Customers table List orders made by customers from 'Germany' and order total > 100.
+
+select Orders.OrderID, Orders.TotalAmount, Customers.Country  
+		from Orders
+		inner join 
+		Customers on Orders.CustomerID = Customers.CustomerID
+		where Customers.Country = 'Germany'
+		and Orders.TotalAmount > 100;
+
 -- Using Employees table List all pairs of employees from different departments.
+
+SELECT 
+    E1.Name AS Employee1, 
+    E2.Name AS Employee2
+FROM 
+    Employees E1
+INNER JOIN 
+    Employees E2 ON E1.DepartmentID <> E2.DepartmentID;
+
 -- Using Payments, Orders, Products table List payment details where the paid amount is not equal to (Quantity × Product Price).
+
+
+select Payments.Amount, Orders.Quantity, Products.Price
+	from Payments
+	inner join
+	Orders on Payments.OrderID = Orders.OrderID
+	inner join
+	products on Orders.productid = products.productid
+	where Payments.Amount <> Orders.Quantity * Products.Price
+
 -- Using Students, Enrollments, Courses table Find students who are not enrolled in any course.
+
+SELECT Students.StudentID, Students.Name
+FROM Students
+LEFT JOIN Enrollments ON Students.StudentID = Enrollments.StudentID
+LEFT JOIN Courses ON Enrollments.CourseID = Courses.CourseID
+WHERE Enrollments.CourseID IS NULL; 
+
 -- Using Employees table List employees who are managers of someone, but their salary is less than or equal to the person they manage.
+
+SELECT E1.Name AS Manager, E2.Name AS Employee, E1.Salary AS ManagerSalary, E2.Salary AS EmployeeSalary
+FROM Employees E1
+INNER JOIN Employees E2 ON E1.EmployeeID = E2.ManagerID
+WHERE E1.Salary <= E2.Salary;
+
 -- Using Orders, Payments, Customers table List customers who have made an order, but no payment has been recorded for it.
+
+SELECT 
+    CONCAT_WS(' ', FirstName, LastName) as name, 
+    Orders.OrderID
+FROM 
+    Customers
+INNER JOIN 
+    Orders ON Customers.CustomerID = Orders.CustomerID
+LEFT JOIN 
+    Payments ON Orders.OrderID = Payments.OrderID
+WHERE 
+    Payments.OrderID IS NULL;
+
