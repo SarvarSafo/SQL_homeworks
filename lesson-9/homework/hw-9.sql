@@ -563,12 +563,40 @@ select Students.Name, Courses.CourseName
 
 -- Using Products, Suppliers table List product and supplier names where supplier name contains “Tech”.
 
-
-
+select Products.ProductName,Suppliers.ContactName, Suppliers.SupplierName
+		from Products
+		inner join
+		Suppliers on Products.SupplierID = Suppliers.SupplierID
+		where Suppliers.SupplierName like '%tech%'
 
 -- Using Orders, Payments table Show orders where payment amount is less than total amount.
+
+select orders.OrderID, Payments.Amount
+		from Orders
+		inner join
+		Payments on Orders.OrderID = Payments.OrderID
+		where Payments.Amount < Orders.TotalAmount;
+
 -- Using Employees table List employee names with salaries greater than their manager’s salary.
+
+SELECT 
+    E1.Name AS EmployeeName, 
+    E1.Salary AS EmployeeSalary, 
+    E2.Name AS ManagerName, 
+    E2.Salary AS ManagerSalary
+FROM 
+    Employees E1
+INNER JOIN 
+    Employees E2 ON E1.ManagerID = E2.EmployeeID
+WHERE 
+    E1.Salary > E2.Salary; 
+
 -- Using Products, Categories table Show products where category is either 'Electronics' or 'Furniture'.
+
+
+
+
+
 -- Using Sales, Customers table Show all sales from customers who are from 'USA'.
 -- Using Orders, Customers table List orders made by customers from 'Germany' and order total > 100.
 -- Using Employees table List all pairs of employees from different departments.
