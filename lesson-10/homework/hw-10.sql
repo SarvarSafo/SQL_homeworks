@@ -484,3 +484,151 @@ SELECT Employees.Name, Departments.DepartmentName
 FROM Employees
 LEFT JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID
 
+/*
+Using the Products and Suppliers tables, write a query to list all suppliers and the products they supply. Show suppliers even if they don’t supply any product.
+🔁 Expected Output: SupplierName, ProductName
+*/
+
+SELECT Suppliers.SupplierName, Products.ProductName FROM Suppliers
+LEFT JOIN Products ON
+Suppliers.SupplierID = Products.SupplierID
+
+/*
+Using the Orders and Payments tables, write a query to return all orders and their corresponding payments. Include orders without payments and payments not linked to any order.
+🔁 Expected Output: OrderID, OrderDate, PaymentDate, Amount
+*/
+
+SELECT Orders.OrderID, Orders.OrderDate, Payments.PaymentDate, Payments.Amount FROM Orders
+LEFT JOIN
+Payments ON Orders.OrderID = Payments.OrderID
+
+/*
+Using the Employees table, write a query to show each employee's name along with the name of their manager.
+🔁 Expected Output: EmployeeName, ManagerName
+*/
+
+SELECT EMP.Name AS EMPLOYEENAME, MNG.NAME AS MANAGERNAME 
+FROM Employees EMP
+LEFT JOIN Employees MNG ON EMP.ManagerID = MNG.EMPLOYEEID
+
+/*
+Using the Students, Courses, and Enrollments tables, write a query to list the names of students who are enrolled in the course named 'Math 101'.
+🔁 Expected Output: StudentName, CourseName
+*/
+
+SELECT Students.Name AS STUDENTNAME, Courses.CourseName FROM Students
+JOIN Enrollments ON
+Students.StudentID = Enrollments.StudentID
+JOIN Courses ON 
+Enrollments.CourseID = Courses.CourseID
+WHERE Courses.CourseName = 'Math 101' 
+
+/*
+Using the Customers and Orders tables, write a query to find customers who have placed an order with more than 3 items. Return their name and the quantity they ordered.
+🔁 Expected Output: FirstName, LastName, Quantity
+*/
+
+SELECT Customers.FirstName, Customers.LastName, SUM(Orders.Quantity) AS TOTALQUANTITY FROM Customers
+JOIN Orders
+ON Customers.CustomerID = Orders.CustomerID
+GROUP BY Customers.FirstName, Customers.LastName
+HAVING SUM(Orders.Quantity) >= 3
+
+/*
+Using the Employees and Departments tables, write a query to list employees working in the 'Human Resources' department.
+🔁 Expected Output: EmployeeName, DepartmentName
+*/
+
+SELECT Employees.Name AS EMPLOYEENAME, Departments.DepartmentName FROM Employees
+JOIN Departments ON
+Employees.DepartmentID = Departments.DepartmentID
+WHERE Departments.DepartmentName = 'Human Resources'
+
+/*
+Using the Employees and Departments tables, write a query to return department names that have more than 10 employees.
+🔁 Expected Output: DepartmentName, EmployeeCount
+*/
+
+SELECT Departments.DepartmentName, COUNT(Employees.EmployeeID) AS [EmployeeCount] FROM Employees
+JOIN Departments ON
+Employees.DepartmentID = Departments.DepartmentID
+GROUP BY Departments.DepartmentName
+HAVING COUNT(Employees.EmployeeID) > 10
+
+/*
+Using the Products and Sales tables, write a query to find products that have never been sold.
+🔁 Expected Output: ProductID, ProductName
+*/
+
+SELECT Products.ProductID, Products.ProductName FROM Products
+LEFT JOIN Sales ON Products.ProductID = Sales.ProductID
+WHERE Sales.ProductID IS NULL
+
+/*
+Using the Customers and Orders tables, write a query to return customer names who have placed at least one order.
+🔁 Expected Output: FirstName, LastName, TotalOrders
+*/
+
+SELECT Customers.FirstName, Customers.LastName, COUNT(Orders.OrderID) AS TOTALORDERS FROM Customers
+JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+GROUP BY Customers.FirstName, Customers.LastName
+HAVING COUNT(Orders.OrderID) >= 1  
+
+/*
+Using the Employees and Departments tables, write a query to show only those records where both employee and department exist (no NULLs).
+🔁 Expected Output: EmployeeName, DepartmentName
+*/
+
+SELECT Employees.Name AS EMPLOYEENAME, Departments.DepartmentName FROM Employees
+JOIN Departments ON
+Employees.DepartmentID = Departments.DepartmentID
+
+/*
+Using the Employees table, write a query to find pairs of employees who report to the same manager.
+🔁 Expected Output: Employee1, Employee2, ManagerID
+*/
+
+SELECT E1.Name AS Employee1, 
+    E2.Name AS Employee2, 
+    E1.ManagerID
+FROM 
+    Employees E1
+JOIN 
+    Employees E2 ON E1.ManagerID = E2.ManagerID
+WHERE 
+    E1.EmployeeID <> E2.EmployeeID;
+
+
+/*
+Using the Orders and Customers tables, write a query to list all orders placed in 2022 along with the customer name.
+🔁 Expected Output: OrderID, OrderDate, FirstName, LastName
+*/
+
+SELECT Orders.OrderID, Orders.OrderDate, Customers.FirstName, Customers.LastName FROM Orders
+JOIN Customers ON 
+Orders.CustomerID = Customers.CustomerID
+WHERE YEAR(Orders.OrderDate) = 2022 
+
+/*
+Using the Employees and Departments tables, write a query to return employees from the 'Sales' department whose salary is above 60000.
+🔁 Expected Output: EmployeeName, Salary, DepartmentName
+*/
+
+SELECT Employees.Name AS EMPLOYEENAME, Employees.Salary, Departments.DepartmentName 
+FROM Employees
+JOIN Departments ON Employees.DepartmentID = Departments.DepartmentID
+WHERE Departments.DepartmentName = 'Sales'
+AND Employees.Salary > 60000
+
+/*
+Using the Orders and Payments tables, write a query to return only those orders that have a corresponding payment.
+🔁 Expected Output: OrderID, OrderDate, PaymentDate, Amount
+*/
+
+SELECT Orders.OrderID, Orders.OrderDate, Payments.PaymentDate, Payments.Amount FROM Orders
+JOIN Payments ON Orders.OrderID = Payments.OrderID
+
+/*
+Using the Products and Orders tables, write a query to find products that were never ordered.
+🔁 Expected Output: ProductID, ProductName
+*/
