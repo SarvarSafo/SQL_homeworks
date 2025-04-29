@@ -632,3 +632,118 @@ JOIN Payments ON Orders.OrderID = Payments.OrderID
 Using the Products and Orders tables, write a query to find products that were never ordered.
 🔁 Expected Output: ProductID, ProductName
 */
+
+SELECT Products.ProductID, Products.ProductName FROM Products
+LEFT join Orders on 
+Products.ProductID = Orders.ProductID
+WHERE Orders.ProductID IS NULL
+
+/*
+Using the Employees table, write a query to find employees whose salary is greater than the average salary of all employees.
+?? Expected Output: EmployeeName, Salary
+*/
+
+SELECT Employees.Name AS EmployeeName, Employees.Salary
+FROM Employees
+WHERE Employees.Salary > (SELECT AVG(Salary) FROM Employees);
+
+/*
+Using the Orders and Payments tables, write a query to list all orders placed before 2020 that have no corresponding payment.
+?? Expected Output: OrderID, OrderDate
+*/
+
+SELECT Orders.OrderID, Orders.OrderDate FROM Orders
+LEFT JOIN Payments ON Orders.OrderID = Payments.OrderID
+WHERE YEAR(Orders.OrderDate) < 2020 AND Payments.OrderID IS NULL
+
+/*
+Using the Products and Categories tables, write a query to return products that do not have a matching category.
+?? Expected Output: ProductID, ProductName
+*/
+
+CREATE TABLE Product_Category (
+    ProductID INT,
+    CategoryID INT,
+    PRIMARY KEY (ProductID, CategoryID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+SELECT p.ProductID, p.ProductName 
+FROM Products p
+LEFT JOIN Product_Category pc ON p.ProductID = pc.ProductID
+LEFT JOIN Categories c ON pc.CategoryID = c.CategoryID
+WHERE pc.CategoryID IS NULL;
+
+/*
+Using the Employees table, write a query to find employees who report to the same manager and earn more than 60000.
+?? Expected Output: Employee1, Employee2, ManagerID, Salary
+*/
+
+SELECT 
+    e1.Name AS Employee1,
+    e2.Name AS Employee2,
+    e1.ManagerID,
+    e1.Salary
+FROM 
+    Employees e1
+JOIN 
+    Employees e2 ON e1.ManagerID = e2.ManagerID
+WHERE 
+    e1.EmployeeID < e2.EmployeeID -- takrorlanishlarni oldini olish uchun
+    AND e1.Salary > 60000
+    AND e2.Salary > 60000;
+
+/*
+Using the Employees and Departments tables, write a query to return employees who work in departments whose name starts with the letter 'M'.
+?? Expected Output: EmployeeName, DepartmentName
+*/
+
+SELECT Employees.Name AS EMPLOYEENAME, Departments.DepartmentName FROM Employees
+JOIN Departments ON
+Employees.DepartmentID = Departments.DepartmentID
+WHERE Departments.DepartmentName LIKE 'M%'
+
+/*
+Using the Products and Sales tables, write a query to list sales where the amount is greater than 500, including product names.
+?? Expected Output: SaleID, ProductName, SaleAmount
+*/
+
+SELECT Sales.SaleID, Products.ProductName, Sales.SaleAmount FROM Products
+JOIN Sales ON
+Products.ProductID = Sales.ProductID
+WHERE Sales.SaleAmount > 500
+
+/*
+Using the Students, Courses, and Enrollments tables, write a query to find students who have not enrolled in the course 'Math 101'.
+?? Expected Output: StudentID, StudentName
+*/
+
+SELECT DISTINCT s.StudentID, s.Name AS STUDENTNAME
+FROM Students s
+LEFT JOIN (
+    SELECT e.StudentID
+    FROM Enrollments e
+    JOIN Courses c ON e.CourseID = c.CourseID
+    WHERE c.CourseName = 'Math 101'
+) AS MathEnrollments ON s.StudentID = MathEnrollments.StudentID
+WHERE MathEnrollments.StudentID IS NULL
+
+/*
+Using the Orders and Payments tables, write a query to return orders that are missing payment details.
+?? Expected Output: OrderID, OrderDate, PaymentID
+*/
+
+SELECT Orders.OrderID, Orders.OrderDate, Payments.PaymentID FROM Orders
+LEFT JOIN Payments ON Orders.OrderID = Payments.OrderID
+WHERE Payments.PaymentID IS NULL
+
+/*
+Using the Products and Categories tables, write a query to list products that belong to either the 'Electronics' or 'Furniture' category.
+?? Expected Output: ProductID, ProductName, CategoryName
+*/
+
+SELECT Products.ProductID, Products.ProductName, Categories.CategoryName
+FROM Products
+JOIN Categories ON Products.Category = Categories.CategoryID
+WHERE Categories.CategoryName IN ('Electronics', 'Furniture');
+
