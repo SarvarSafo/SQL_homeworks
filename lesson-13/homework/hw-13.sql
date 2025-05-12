@@ -317,3 +317,39 @@ where first_name like 'A%'
 	or first_name like 'J%'
 	or first_name like 'M%'
 order by FIRST_NAME
+
+--Write an SQL query to find the total salary for each manager ID.(Employees table)
+
+select MANAGER_ID, sum(SALARY) as total_salary
+from Employees
+group by MANAGER_ID
+
+--Write a query to retrieve the year and the highest value from the columns Max1, Max2, and Max3 for each row in the TestMax table
+
+select Year1,
+  case
+    WHEN Max1 >= Max2 AND Max1 >= Max3 THEN Max1
+    WHEN Max2 >= Max1 AND Max2 >= Max3 THEN Max2
+    ELSE Max3
+  end as highest_value
+from TestMax;
+
+--Find me odd numbered movies and description is not boring.(cinema)
+
+select *
+from cinema
+where id % 2 <> 0
+and description <> 'boring'
+
+-- You have to sort data based on the Id but Id with 0 should always be the last row. Now the question is can you do that with a single order by column.(SingleOrder)
+
+select *
+from SingleOrder
+order by 
+case when Id = 0 THEN 1 ELSE 0 END,
+  Id;
+
+--Write an SQL query to select the first non-null value from a set of columns. If the first column is null, move to the next, and so on. If all columns are null, return null.(person)
+
+select coalesce(ssn, passportid, itin) as non_null
+from person
