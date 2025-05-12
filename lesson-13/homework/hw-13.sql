@@ -353,3 +353,24 @@ case when Id = 0 THEN 1 ELSE 0 END,
 
 select coalesce(ssn, passportid, itin) as non_null
 from person
+
+--Split column FullName into 3 part ( Firstname, Middlename, and Lastname).(Students Table)
+
+select
+  left(FullName, CHARINDEX(' ', FullName) - 1) AS Firstname,  
+  case 
+    when CHARINDEX(' ', FullName, CHARINDEX(' ', FullName) + 1) > 0 
+    THEN SUBSTRING(FullName, CHARINDEX(' ', FullName) + 1, CHARINDEX(' ', FullName, CHARINDEX(' ', FullName) + 1) - CHARINDEX(' ', FullName) - 1)
+    ELSE NULL
+end as Middlename,  
+  RIGHT(FullName, LEN(FullName) - CHARINDEX(' ', FullName, CHARINDEX(' ', FullName) + 1)) AS Lastname  
+FROM Students;
+
+--For every customer that had a delivery to California, provide a result set of the customer orders that were delivered to Texas. (Orders Table)
+
+select order1.*
+from Orders as order1
+join orders as order2
+on order1.customerID = order2.customerID
+where order2.DeliveryState = 'CA'
+and order1.DeliveryState = 'TX'
