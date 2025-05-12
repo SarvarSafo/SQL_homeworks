@@ -374,3 +374,24 @@ join orders as order2
 on order1.customerID = order2.customerID
 where order2.DeliveryState = 'CA'
 and order1.DeliveryState = 'TX'
+
+--Find all employees whose names (concatenated first and last) contain the letter "a" at least 3 times.
+
+select * from Employees 
+where CONCAT(FIRST_NAME, ' ', LAST_NAME) like '%a%a%a%'
+
+--The total number of employees in each department and the percentage of those employees who have been with the company for more than 3 years(Employees)
+
+SELECT 
+DEPARTMENT_ID,
+COUNT(*) AS TotalEmployees,
+SUM(CASE 
+WHEN DATEDIFF(YEAR, HIRE_DATE, GETDATE()) > 3 THEN 1 
+ELSE 0 
+END) AS EmployeesOver3Years,
+CAST(SUM(CASE 
+WHEN DATEDIFF(YEAR, HIRE_DATE, GETDATE()) > 3 THEN 1 
+ELSE 0 
+END) * 100.0 / COUNT(*) AS DECIMAL(5,2)) AS PercentageOver3Years
+FROM Employees
+GROUP BY DEPARTMENT_ID;
