@@ -446,3 +446,50 @@ FROM classified;
 select  StudentID,FullName, SUM(Grade) OVER (ORDER BY studentid) AS Total
 FROM Students;
 
+--Write an SQL query that replaces each row with the sum of its value and the previous rows' value. (Students table)
+
+select  StudentID,FullName, SUM(Grade) OVER (ORDER BY studentid) AS Total
+FROM Students;
+
+--You are given the following table, which contains a VARCHAR column that contains mathematical equations. Sum the equations and provide the answers in the output.(Equations)
+
+select * from Equations
+
+
+
+
+--Given the following dataset, find the students that share the same birthday.(Student Table)
+
+select * from Student
+SELECT Birthday, COUNT(*) AS StudentCount
+FROM Student
+GROUP BY Birthday
+HAVING COUNT(*) > 1;
+
+--You have a table with two players (Player A and Player B) and their scores. If a pair of players have multiple entries, aggregate their scores into a single row for each unique pair of players. Write an SQL query to calculate the total score for each unique player pair(PlayerScores)
+
+select * from PlayerScores
+
+SELECT 
+    CASE 
+        WHEN PlayerA < PlayerB THEN PlayerA
+        ELSE PlayerB
+    END AS Player1,
+    CASE 
+        WHEN PlayerA < PlayerB THEN PlayerB
+        ELSE PlayerA
+    END AS Player2,
+    SUM(Score) AS TotalScore
+FROM 
+    PlayerScores
+GROUP BY 
+    CASE 
+        WHEN PlayerA < PlayerB THEN PlayerA
+        ELSE PlayerB
+    END,
+    CASE 
+        WHEN PlayerA < PlayerB THEN PlayerB
+        ELSE PlayerA
+    END
+ORDER BY Player1, Player2;
+
