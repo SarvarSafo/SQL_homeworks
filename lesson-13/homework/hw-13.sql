@@ -395,3 +395,54 @@ ELSE 0
 END) * 100.0 / COUNT(*) AS DECIMAL(5,2)) AS PercentageOver3Years
 FROM Employees
 GROUP BY DEPARTMENT_ID;
+
+--Write an SQL statement that determines the most and least experienced Spaceman ID by their job description.(Personal)
+
+SELECT SpacemanID, JobDescription, MissionCount, 'Most Experienced' AS ExperienceLevel
+FROM Personal
+WHERE MissionCount = (SELECT MAX(MissionCount) FROM Personal)
+UNION
+SELECT SpacemanID, JobDescription, MissionCount, 'Least Experienced' AS ExperienceLevel
+FROM Personal
+WHERE MissionCount = (SELECT MIN(MissionCount) FROM Personal);
+
+--Write an SQL query that separates the uppercase letters, lowercase letters, numbers, and other characters from the given string 'tf56sd#%OqH' into separate columns.
+
+DECLARE @str NVARCHAR(100) = 'tf56sd#%OqH';
+
+WITH chars AS (
+    SELECT 
+        1 AS pos,
+        SUBSTRING(@str, 1, 1) AS ch,
+        LEN(@str) AS len
+    UNION ALL
+    SELECT 
+        pos + 1,
+        SUBSTRING(@str, pos + 1, 1),
+        len
+    FROM chars
+    WHERE pos < len
+),
+classified AS (
+    SELECT 
+        ch,
+        CASE 
+            WHEN ch LIKE '[A-Z]' THEN 'Upper'
+            WHEN ch LIKE '[a-z]' THEN 'Lower'
+            WHEN ch LIKE '[0-9]' THEN 'Number'
+            ELSE 'Other'
+        END AS CharType
+    FROM chars
+)
+SELECT
+    STRING_AGG(CASE WHEN CharType = 'Upper' THEN ch ELSE NULL END, '') AS UppercaseLetters,
+    STRING_AGG(CASE WHEN CharType = 'Lower' THEN ch ELSE NULL END, '') AS LowercaseLetters,
+    STRING_AGG(CASE WHEN CharType = 'Number' THEN ch ELSE NULL END, '') AS Numbers,
+    STRING_AGG(CASE WHEN CharType = 'Other' THEN ch ELSE NULL END, '') AS OtherCharacters
+FROM classified;
+
+--Write an SQL query that replaces each row with the sum of its value and the previous rows' value. (Students table)
+
+select  StudentID,FullName, SUM(Grade) OVER (ORDER BY studentid) AS Total
+FROM Students;
+
