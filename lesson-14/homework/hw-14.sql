@@ -316,3 +316,233 @@ SELECT
     TRIM(SUBSTRING(Name, 1, CHARINDEX(',', Name) - 1)) AS Name,
     TRIM(SUBSTRING(Name, CHARINDEX(',', Name) + 1, LEN(Name))) AS Surname
 FROM TestMultipleColumns;
+
+--2. Write a SQL query to find strings from a table where the string itself contains the % character.(TestPercent)
+
+select * from TestPercent
+where Strs like '%\%%' escape '\';
+
+--3. In this puzzle you will have to split a string based on dot(.).(Splitter)
+
+select * from Splitter
+select CHARINDEX('.', Vals)
+from Splitter
+
+
+select left (Vals, CHARINDEX('.', Vals)-1) as leftpart,
+	right (Vals, len(vals) - CHARINDEX('.', Vals)) as rightpart
+from Splitter
+where CHARINDEX('.', Vals) > 0;
+
+--4. Write a SQL query to replace all integers (digits) in the string with 'X'.(1234ABC123456XYZ1234567890ADS)
+
+select translate('1234ABC123456XYZ1234567890ADS', '0123456789', 'XXXXXXXXXX') AS ReplacedString;
+
+--5. Write a SQL query to return all rows where the value in the Vals column contains more than two dots (.).(testDots)
+
+select * from testDots
+where LEN(Vals) - LEN(replace(Vals, '.', '')) > 2;
+
+--6. Write a SQL query to count the spaces present in the string.(CountSpaces)
+
+SELECT texts,
+LEN(texts) - LEN(REPLACE(texts, ' ', '')) AS Countings
+FROM CountSpaces;
+
+--7. write a SQL query that finds out employees who earn more than their managers.(Employee)
+
+select e.Id, e.Name, e.Salary, e.ManagerId 
+from Employee E
+join Employee M 
+on e.ManagerId = m.Id
+where e.Salary > m.Salary
+
+--8. Find the employees who have been with the company for more than 10 years, but less than 15 years. Display their Employee ID, First Name, Last Name, Hire Date, and the Years of Service (calculated as the number of years between the current date and the hire date).(Employees)
+
+select Employee_ID, First_Name, Last_Name, Hire_Date, DATEDIFF(YEAR, hire_date, GETDATE()) as [the Years of Service] from Employees
+where DATEDIFF(YEAR, hire_date, GETDATE()) > 10 and DATEDIFF(YEAR, hire_date, GETDATE()) < 15
+
+--1. Write a SQL query to separate the integer values and the character values into two different columns.(rtcfvty34redt)
+
+DECLARE @str NVARCHAR(100) = 'rtcfvty34redt';
+
+WITH Numbers AS (
+    SELECT 1 AS n
+    UNION ALL
+    SELECT n + 1 FROM Numbers WHERE n + 1 <= LEN(@str)
+),
+Separated AS (
+    SELECT
+        n,
+        SUBSTRING(@str, n, 1) AS ch
+    FROM Numbers
+)
+SELECT
+    @str AS OriginalString,
+    STRING_AGG(CASE WHEN ch LIKE '[0-9]' THEN ch END, '') AS Digits,
+    STRING_AGG(CASE WHEN ch LIKE '[A-Za-z]' THEN ch END, '') AS Letters
+FROM Separated
+OPTION (MAXRECURSION 1000);
+
+--2. write a SQL query to find all dates' Ids with higher temperature compared to its previous (yesterday's) dates.(weather)
+
+select w1.Id, w1.RecordDate, w1.Temperature
+from weather w1
+JOIN weather w2
+ON w1.RecordDate = DATEADD(DAY, 1, w2.RecordDate)
+where w1.Temperature > w2.Temperature;
+
+--3. Write an SQL query that reports the first login date for each player.(Activity)
+
+select player_id, MIN(event_date) AS FirstLoginDate
+from Activity
+group by player_id;
+
+--4. Your task is to return the third item from that list.(fruits)
+
+select PARSENAME(REPLACE(fruit_list, ',', '.'), 2) AS ThirdItem
+FROM fruits;
+
+--5. Write a SQL query to create a table where each character from the string will be converted into a row.(sdgfhsdgfhs@121313131)
+
+DECLARE @input VARCHAR(100) = 'sdgfhsdgfhs@121313131';
+
+WITH Chars AS (
+    SELECT 1 AS n,
+           SUBSTRING(@input, 1, 1) AS character
+    UNION ALL
+    SELECT n + 1,
+           SUBSTRING(@input, n + 1, 1)
+    FROM Chars
+    WHERE n < LEN(@input)
+)
+SELECT character
+FROM Chars
+OPTION (MAXRECURSION 1000);
+
+--6. You are given two tables: p1 and p2. Join these tables on the id column. The catch is: when the value of p1.code is 0, replace it with the value of p2.code.(p1,p2)
+
+SELECT 
+    p1.id,
+    CASE 
+        WHEN p1.code = 0 THEN p2.code 
+        ELSE p1.code 
+    END AS final_code
+FROM p1
+JOIN p2 ON p1.id = p2.id;
+
+--7. Write an SQL query to determine the Employment Stage for each employee based on their HIRE_DATE. The stages are defined as follows:
+
+--> - If the employee has worked for less than 1 year → 'New Hire'
+
+--> - If the employee has worked for 1 to 5 years → 'Junior'
+
+--> -  If the employee has worked for 5 to 10 years → 'Mid-Level'
+
+--> -  If the employee has worked for 10 to 20 years → 'Senior'
+
+--> - If the employee has worked for more than 20 years → 'Veteran'(Employees)
+
+select *,
+DATEDIFF(YEAR, hire_date, GETDATE()) as [the Years of Service],
+case
+when DATEDIFF(YEAR, hire_date, GETDATE()) < 1 then 'New Hire'
+when DATEDIFF(YEAR, hire_date, GETDATE())between 1 and 5 then'Junior'
+when DATEDIFF(YEAR, hire_date, GETDATE()) between 6 and 10 then'Mid-Level'
+when DATEDIFF(YEAR, hire_date, GETDATE()) between 11 and 20 then'Senior'
+when DATEDIFF(YEAR, hire_date, GETDATE()) > 20 then 'Veteran'
+else null
+end as Estage
+from Employees
+
+--8. Write a SQL query to extract the integer value that appears at the start of the string in a column named Vals.(GetIntegers)
+
+select * from GetIntegers
+where VALS like '[0-9]%';
+
+SELECT Vals,
+LEFT(Vals, PATINDEX('%[^0-9]%', Vals + 'X') - 1) AS StartingInteger
+FROM GetIntegers
+WHERE Vals LIKE '[0-9]%';
+
+--1. In this puzzle you have to swap the first two letters of the comma separated string.(MultipleVals)
+
+select * from MultipleVals
+
+select Vals, STRING_AGG(
+        CASE 
+        WHEN LEN(value) >= 2 THEN 
+        SUBSTRING(value, 2, 1) + SUBSTRING(value, 1, 1) + SUBSTRING(value, 3, LEN(value))
+        ELSE value
+        END,
+        ','
+    ) AS SwappedVals
+FROM (
+    SELECT Vals, 
+           value 
+    FROM MultipleVals
+    CROSS APPLY STRING_SPLIT(Vals, ',')
+) AS parts
+GROUP BY Vals;
+
+--2. Write a SQL query that reports the device that is first logged in for each player.(Activity)
+
+select player_id, MIN(device_id) AS FirstDevice
+from Activity
+group by player_id;
+
+----3. You are given a sales table. Calculate the week-on-week percentage of sales
+--per area for each financial week. For each week, the total sales will be considered 100%,
+--and the percentage sales for each day of the week should be calculated based on the
+--area sales for that week.(WeekPercentagePuzzle)
+
+WITH DailySales AS (
+    SELECT
+        Area,
+        [Date],
+        [DayName],
+        [DayOfWeek],
+        FinancialWeek,
+        [MonthName],
+        FinancialYear,
+        ISNULL(SalesLocal, 0) + ISNULL(SalesRemote, 0) AS TotalSales
+    FROM 
+        WeekPercentagePuzzle
+),
+WeeklyTotals AS (
+    SELECT
+        Area,
+        FinancialWeek,
+        FinancialYear,
+        SUM(TotalSales) AS WeeklyTotalSales
+    FROM
+        DailySales
+    GROUP BY
+        Area, FinancialWeek, FinancialYear
+)
+
+SELECT
+    d.Area,
+    d.[Date],
+    d.[DayName],
+    d.[DayOfWeek],
+    d.FinancialWeek,
+    d.[MonthName],
+    d.FinancialYear,
+    d.TotalSales AS DailySales,
+    w.WeeklyTotalSales,
+    CASE 
+        WHEN w.WeeklyTotalSales = 0 THEN 0 -- Avoid division by zero
+        ELSE CAST(d.TotalSales * 100.0 / w.WeeklyTotalSales AS DECIMAL(10,2))
+    END AS SalesPercentageOfWeek
+FROM
+    DailySales d
+JOIN
+    WeeklyTotals w ON d.Area = w.Area 
+                   AND d.FinancialWeek = w.FinancialWeek 
+                   AND d.FinancialYear = w.FinancialYear
+ORDER BY
+    d.Area,
+    d.FinancialWeek,
+    d.FinancialYear,
+    d.[Date];
